@@ -92,6 +92,13 @@ def getChatMessages():
                 "Comments": comments
             })
 
+def appEnd():
+    app.stop()
+    return app.is_connected
+    
+def creazioneCSV():
+    df = pd.DataFrame(data_list)
+    df.to_csv("data.csv", index=False)
 
 # connetticlient()
 #getChatMessages()
