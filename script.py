@@ -15,13 +15,13 @@ message_id = os.getenv('MESSAGE_ID')
 app = Client('session_name', api_id=api_id, api_hash=api_hash)
 data_list = []
 
-def connetticlient():
+def connetticlient() -> None:
     started = datetime.today()
     app.start()
     print(" ######## app started successfully ########### ")
     return app.is_connected
 
-def getChatMessages():
+def getChatMessages() -> None:
     i = 0
     chat_history = app.get_chat_history(channel_id, limit=100,offset_id=16108)
     for message in chat_history:
@@ -92,11 +92,11 @@ def getChatMessages():
                 "Comments": comments
             })
 
-def appEnd():
+def appEnd() -> None:
     app.stop()
     return app.is_connected
     
-def creazioneCSV():
+def creazioneCSV() -> None:
     df = pd.DataFrame(data_list)
     df.to_csv("data.csv", index=False)
 
