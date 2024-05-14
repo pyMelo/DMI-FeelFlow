@@ -2,15 +2,17 @@ import pytest
 from datetime import datetime
 import script
 
+data_list = []
+
 def test_start_client():  
-    assert script.connetticlient() == True
+    assert script.connect_client() == True
 
 def test_getChatMessages(): 
-    assert script.getChatMessages2(2) != []
+    assert script.get_chat_messages(2) != []
 
 
 def test_getChatMessagesFormat():
-    data_list = script.getChatMessages2(limit=100)
+    data_list = script.get_chat_messages(10)
     for item in data_list:
         assert "Message ID" in item
         assert "Spot" in item
@@ -23,4 +25,14 @@ def test_getChatMessagesFormat():
 
 
 def session_ended():
-    assert script.appEnd() == False
+    assert script.end_app() == False
+
+
+
+# def prova():
+#     script.connect_client()
+#     data_list = script.get_chat_messages(10)
+#     for item in data_list:
+#         print(item)
+
+# prova()

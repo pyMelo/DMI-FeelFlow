@@ -15,14 +15,14 @@ message_id = os.getenv('MESSAGE_ID')
 app = Client('session_name', api_id=api_id, api_hash=api_hash)
 data_list = []
 
-def connect_client() -> None:
+def connect_client() -> 'bool':
     print('Connecting to client...')
     started = datetime.today()
     app.start()
     print("App started successfully.")
     return app.is_connected
 
-def get_chat_messages(limit) -> None:
+def get_chat_messages(limit) -> list[any]:
     i = 0
     chat_history = app.get_chat_history(channel_id, limit=limit)
     for message in chat_history:
@@ -50,8 +50,9 @@ def get_chat_messages(limit) -> None:
                 "Spot": message.caption,
                 "Comments": []
             })
+    return data_list
 
-def end_app() -> None:
+def end_app() -> 'bool':
     app.stop()
     print("App stopped.")
     return app.is_connected
