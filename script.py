@@ -15,83 +15,63 @@ message_id = os.getenv('MESSAGE_ID')
 app = Client('session_name', api_id=api_id, api_hash=api_hash)
 data_list = []
 
-def connetticlient():
+def connect_client() -> None:
+    print('Connecting to client...')
     started = datetime.today()
     app.start()
-    print(" ######## app started successfully ########### ")
+    print("App started successfully.")
     return app.is_connected
 
-def getChatMessages():
+def get_chat_messages(limit) -> None:
     i = 0
-    chat_history = app.get_chat_history(channel_id, limit=100,offset_id=16108)
+    chat_history = app.get_chat_history(channel_id, limit=limit)
     for message in chat_history:
-        i+=1
-        
-        # A) Possibility to get the posts with images AND video and getting the text under written. 
-        if message.text is None:
-            print("\n##### Spot numero: " + str(i) + " ID : " + str(message.id))
-
-            if message.photo:
-                print(" ------------- Image of the Spot ------------------- ")
-                # A) Download the images/video on the "downloads" directory.
-                # image = app.download_media(message.photo.file_id,f'image{message.id}.jpg')
-                # print(image)
-            if message.video:
-                print(" ------------- Video of the Spot ------------------- ")
-                # video = app.download_media(message.video.file_id,f'video{message.id}.mp4')
-                # print(video)  
-                if message.caption:
-                    print(" ------------- Text of the Spot ------------------- ")
-                    text_below = message.caption
-                    print(message.caption)
-            
+        i += 1
+        print("\n##### Spot numero: " + str(i) + " ID : " + str(message.id))
         if message.text is not None:
-            print("\n##### Spot numero: " + str(i) + " ID : " + str(message.id))
             print(message.text)
             comments = []
             print("\n## Commenti del post con ID :" + str(message.id))
             for reply in app.get_discussion_replies(channel_id, message.id):
-                
-                # Q) Not sure if is saving the corret file, not visible from my laptop.
-                
-                # if reply.text is None:         
-                #     if reply.animation:
-                #         print(" ------------- GIF of the comment ------------------- ")
-                #         gif = app.download_media(reply.animation.file_id,f'animation{reply.id}.gif')
-                #         print(gif)
-                #     if reply.sticker:
-                #         print(" ------------- Sticker of the comment ------------------- ")
-                #         sticker = app.download_media(reply.sticker.file_id,f'sticker{reply.id}.jpeg')
-                #         print(sticker)
-                
-                    # A) Added the same concept as the post.
-                    if reply.photo:
-                        print(" ------------- Image of the comment ------------------- ")
-                        # A) Download the images/video on the "downloads" directory.
-                        image = app.download_media(reply.photo.file_id,f'image{reply.id}.jpg')
-                        print(image)
-                    if reply.video:
-                        print(" ------------- Video of the comment ------------------- ")
-                        video = app.download_media(reply.video.file_id,f'video{reply.id}.mp4')
-                        print(video)
-                        
-                        if reply.caption:
-                            print(" ------------- Text of the comment ------------------- ")
-                            text_below = reply.caption
-                            print("- "+ message.caption)
-            
-            # A) If the message doesn't contain text it doesn't enter in the if (None = GIF,STICKER,PHOTO,VIDEO,VOICE MESSAGE(?) ).
-            if reply.text is not None:
-                print("- "+reply.text)
-                comments.append(reply.text)
-                time.sleep(2)
-                
+                if reply.text is not None:
+                    print("- "+reply.text)
+                    comments.append(reply.text)
+                    time.sleep(2)
             data_list.append({
                 "Message ID": message.id,
                 "Spot": message.text,
                 "Comments": comments
             })
+        elif message.caption:
+            print(" ------------- Text of the Spot ------------------- ")
+            print(message.caption)
+            data_list.append({
+                "Message ID": message.id,
+                "Spot": message.caption,
+                "Comments": []
+            })
 
+def end_app() -> None:
+    app.stop()
+    print("App stopped.")
+    return app.is_connected
 
-# connetticlient()
-#getChatMessages()
+def create_csv() -> None:
+    df = pd.DataFrame(data_list)
+    df.to_csv("data.csv", index=False)
+    print("CSV created successfully.")
+
+def main():
+    connection_status = connect_client()
+    if connection_status:
+        limit = int(input("Enter the limit for retrieving chat messages: "))
+        get_chat_messages(limit)
+        create_csv_option = input("Do you want to create a CSV file? (yes/no): ").lower()
+        if create_csv_option == "yes":
+            create_csv()
+        end_app()
+    else:
+        print("Failed to connect to client.")
+
+if __name__ == "__main__":
+    main()
