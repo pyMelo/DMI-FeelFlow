@@ -1,0 +1,7 @@
+pyrogram
+pandas
+nltk
+translate
+pytest
+script
+python-dotenv
