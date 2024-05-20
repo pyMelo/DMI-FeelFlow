@@ -13,4 +13,7 @@ docs/source/api/types/
 
 __pycache__/
 *.py[cod]
+**/__pycache__
+**/*.pyc
+**/.DS_Store
 *$py.class
