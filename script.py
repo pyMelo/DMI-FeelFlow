@@ -4,6 +4,8 @@ import pandas as pd
 import time
 import os
 import dotenv
+from typing import Any, List  # Correzione qui
+
 
 dotenv.load_dotenv()
 api_id = os.getenv('API_ID')
@@ -22,7 +24,7 @@ def connect_client() -> 'bool':
     print("App started successfully.")
     return app.is_connected
 
-def get_chat_messages(limit) -> list[any]:
+def get_chat_messages(limit: int) -> List[any]:
     i = 0
     chat_history = app.get_chat_history(channel_id, limit=limit)
     for message in chat_history:
