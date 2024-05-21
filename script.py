@@ -1,12 +1,10 @@
 """Modulo che esegue la sentiment di alcuni spot del canale telegram dmi"""
-#from datetime import datetime
 import time
 import os
-#from typing import Any, List  # Correzione qui
+from typing import List
 import dotenv
 from pyrogram import Client
 import pandas as pd
-
 
 dotenv.load_dotenv()
 api_id = os.getenv('API_ID')
@@ -21,12 +19,11 @@ data_list = []
 def connect_client() -> 'bool':
     """Modulo che esegue la connessione del client."""
     print('Connecting to client...')
-   # started = datetime.today()
     app.start()
     print("App started successfully.")
     return app.is_connected
 
-def get_chat_messages(limit: int) -> list[any]:
+def get_chat_messages(limit: int) -> List[any]:
     """Modulo che prende n messaggi del channel dmi."""
     i = 0
     chat_history = app.get_chat_history(channel_id, limit=limit)
