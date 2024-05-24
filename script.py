@@ -13,17 +13,16 @@ phone_number = os.getenv('PHONE_NUMBER')
 channel_id = os.getenv('CHANNEL_ID')
 message_id = os.getenv('MESSAGE_ID')
 
-app = Client('session_name', api_id=api_id, api_hash=api_hash)
 data_list = []
 
-def connect_client() -> 'bool':
+def connect_client(app: Client) -> 'bool':
     """Modulo che esegue la connessione del client."""
     print('Connecting to client...')
     app.start()
     print("App started successfully.")
     return app.is_connected
 
-def get_chat_messages(limit: int) -> List[any]:
+def get_chat_messages(app: Client, limit: int) -> List[any]:
     """Modulo che prende n messaggi del channel dmi."""
     i = 0
     chat_history = app.get_chat_history(channel_id, limit=limit)
@@ -54,13 +53,13 @@ def get_chat_messages(limit: int) -> List[any]:
             })
     return data_list
 
-def end_app() -> 'bool':
+def end_app(app: Client) -> 'bool':
     """Modulo che stoppa il client."""
     app.stop()
     print("App stopped.")
     return app.is_connected
 
-def create_csv() -> None:
+def create_csv(data_list: List[any]) -> None:
     """Modulo che crea il csv con gli spot e la sentiment."""
     df = pd.DataFrame(data_list)
     df.to_csv("data.csv", index=False)
@@ -68,14 +67,15 @@ def create_csv() -> None:
 
 def main():
     """Modulo main che lancia tutte le function definite in precedenza."""
-    connection_status = connect_client()
+    app = Client('session_name', api_id=api_id, api_hash=api_hash)
+    connection_status = connect_client(app)
     if connection_status:
         limit = int(input("Enter the limit for retrieving chat messages: "))
-        get_chat_messages(limit)
+        get_chat_messages(app, limit)
         create_csv_option = input("Do you want to create a CSV file? (yes/no): ").lower()
         if create_csv_option == "yes":
-            create_csv()
-        end_app()
+            create_csv(data_list)
+        end_app(app)
     else:
         print("Failed to connect to client.")
 
