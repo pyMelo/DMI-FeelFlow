@@ -29,8 +29,6 @@ jobs:
           echo "PHONE_NUMBER=mock_phone_number" >> $GITHUB_ENV
           echo "CHANNEL_ID=mock_channel_id" >> $GITHUB_ENV
           echo "MESSAGE_ID=mock_message_id" >> $GITHUB_ENV
-      - name: Run data collection script
-        run: python script.py 100 yes
       - name: Upload data.csv
         uses: actions/upload-artifact@v2
         with:
