@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyrogram pandas python-dotenv pytest
+          pip install pyrogram pandas python-dotenv pytest pytest-mock
       - name: Set environment variables
         run: |
           echo "API_ID=mock_api_id" >> $GITHUB_ENV
