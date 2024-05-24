@@ -1,17 +1,32 @@
-import pytest
 from datetime import datetime
+import pytest
+from unittest.mock import MagicMock
 import script
 
 data_list = []
 
-def test_start_client():  
+@pytest.fixture
+def mock_client(mocker):
+    client = mocker.MagicMock()
+    client.is_connected = False  # Mock the is_connected property to prevent connection attempts
+    client.connect = mocker.AsyncMock()  # Mock the connect method to prevent connection attempts
+    client.load_session = mocker.AsyncMock()  # Mock the load_session method to prevent session loading
+    client.storage.open = mocker.AsyncMock()  # Mock the storage.open method to prevent file operations
+
+    mocker.patch("script.Client", return_value=client)  # Patch the Client class to return the mock client
+    
+    return client
+
+data_list = []
+
+def test_start_client(mock_client):  
     assert script.connect_client() == True
 
-def test_getChatMessages(): 
+def test_getChatMessages(mock_client): 
     assert script.get_chat_messages(2) != []
 
 
-def test_getChatMessagesFormat():
+def test_getChatMessagesFormat(mock_client):
     data_list = script.get_chat_messages(10)
     for item in data_list:
         assert "Message ID" in item
@@ -28,11 +43,3 @@ def session_ended():
     assert script.end_app() == False
 
 
-
-# def prova():
-#     script.connect_client()
-#     data_list = script.get_chat_messages(10)
-#     for item in data_list:
-#         print(item)
-
-# prova()

@@ -24,13 +24,13 @@ jobs:
           pip install pyrogram pandas python-dotenv pytest
       - name: Set environment variables
         run: |
-          echo "API_ID=${{ secrets.API_ID }}" >> $GITHUB_ENV
-          echo "API_HASH=${{ secrets.API_HASH }}" >> $GITHUB_ENV
-          echo "PHONE_NUMBER=${{ secrets.PHONE_NUMBER }}" >> $GITHUB_ENV
-          echo "CHANNEL_ID=${{ secrets.CHANNEL_ID }}" >> $GITHUB_ENV
-          echo "MESSAGE_ID=${{ secrets.MESSAGE_ID }}" >> $GITHUB_ENV
-      #- name: Run data collection script
-       # run: python script.py 100 yes
+          echo "API_ID=mock_api_id" >> $GITHUB_ENV
+          echo "API_HASH=mock_api_hash" >> $GITHUB_ENV
+          echo "PHONE_NUMBER=mock_phone_number" >> $GITHUB_ENV
+          echo "CHANNEL_ID=mock_channel_id" >> $GITHUB_ENV
+          echo "MESSAGE_ID=mock_message_id" >> $GITHUB_ENV
+      # - name: Run data collection script
+      #  run: python script.py 100 yes
       - name: Upload data.csv
         uses: actions/upload-artifact@v2
         with:
