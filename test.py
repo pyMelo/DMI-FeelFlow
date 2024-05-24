@@ -6,14 +6,14 @@ import script
 data_list = []
 
 @pytest.fixture
-def mock_client(pytest_mock):
-    client = MagicMock()
+def mock_client(mocker):
+    client = mocker.MagicMock()
     client.is_connected = False  # Mock the is_connected property to prevent connection attempts
-    client.connect = MagicMock()  # Mock the connect method to prevent connection attempts
-    client.load_session = MagicMock()  # Mock the load_session method to prevent session loading
-    client.storage.open = MagicMock()  # Mock the storage.open method to prevent file operations
+    client.connect = mocker.AsyncMock()  # Mock the connect method to prevent connection attempts
+    client.load_session = mocker.AsyncMock()  # Mock the load_session method to prevent session loading
+    client.storage.open = mocker.AsyncMock()  # Mock the storage.open method to prevent file operations
 
-    pytest_mock.patch("script.Client", return_value=client)  # Patch the Client class to return the mock client
+    mocker.patch("script.Client", return_value=client)  # Patch the Client class to return the mock client
     
     return client
 
